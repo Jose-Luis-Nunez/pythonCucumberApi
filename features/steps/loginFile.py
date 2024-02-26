@@ -1,38 +1,25 @@
-from behave import *
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.webdriver import WebDriver
-import time
-from selenium.webdriver.common.by import By
+from pytest_bdd import scenario, given, when, then
+import pytest
 
-chrome_driver_path = "/home/prasanth/Downloads/chromedriver_Linux64/chromedriver"
-chrome_service = Service(executable_path=chrome_driver_path)
+@scenario('logging.feature', 'Getting Application ID')
+def test_GetApplicationId(application):
+    pass
 
+@given("I am a Logging user")
+def LoggingUser():
+    pass
 
-@given('Launching chrome Browser')
-def launchBrowser(context):
-    context.driver = WebDriver(service=chrome_service)
+@given("I have an application name")
+def LoggingApplication(application):
+    application.appName = "project_creator"
 
+@when("I request an application ID")
+def GetApplicationId(application):
+    response = requests.get("http://<HOSTNAME>/loggingapi/v1/Application", json = {"appName": application.appName})
+    data = response.json()
+    application.appId = data["id"]
+    assert data["status"] == 200
 
-@when('Open caratlane Login page')
-def openLoginURL(context):
-    context.driver.maximize_window()
-    context.driver.get("https://www.caratlane.com/login")
-
-
-@when('Enter userName "{email}"')
-def enterEmail (context, email):
-    context.driver.find_element(by=By.XPATH, value="//*[@name= 'emailMobile']").send_keys(email)
-
-
-@when('click continue to login butotn')
-def clicContinueToLoginCta(context) :
-    context.driver.find_element(by=By.XPATH, value="//*[text(='CONTINUE TO LOGIN']").click()
-
-
-@when('Enter Password "{Pwd}"')
-def enterPassword(context, Pwd):
-    print('------------------>', Pwd)
-    time.sleep(5)
-    context.driver.find_element(by=By.XPATH, value="//*[@name= 'password' ]").send_keys(Pwd)
-@when('click on the Login Button')
-def clickSubmitButton(context):
+@then("I should get an application ID")
+def CheckingForId(application):
+    assert application.appId == 2

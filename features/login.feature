@@ -1,10 +1,8 @@
-Feature: Caratlane Login
+Feature: Logging API
+  An API to handle all of your logging needs
 
-  Scenario: Login to caratlane with valid parameters
-    Given Launching chrome browser
-    When Open caratlane Login page
-    And  Enter userName "xxxxxxxx6@caratlane.com"
-    And  click continue to login button
-    And  Enter Password "YYYYYY"
-    And  click on the Login button
-    Then User must logined successfully
+  Scenario: Getting Application ID
+    Given I am a Logging user
+    And I have an application name
+    When I request an application ID
+    Then I should get an application ID
